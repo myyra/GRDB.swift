@@ -1,0 +1,27 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_group")
+
+cc_library(
+    name = "CSQLite",
+    hdrs = ["Sources/CSQLite/shim.h"],
+    includes = ["Sources/CSQLite"],
+)
+
+swift_library(
+    name = "GRDB",
+    package_name = "GRDB",
+    srcs = glob(["GRDB/**/*.swift"]),
+    data = [
+        ":Resources",
+    ],
+    defines = ["SWIFT_PACKAGE"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":CSQLite",
+    ],
+)
+
+apple_resource_group(
+    name = "Resources",
+    resources = ["GRDB/PrivacyInfo.xcprivacy"],
+)
